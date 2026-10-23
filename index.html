@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Picanine Photobooth - Web Photobooth</title>
-  <!-- Google Fonts & Font Awesome Icons -->
+  <title>Picanine Photobooth - Online Photobooth</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
@@ -57,7 +56,7 @@
     button, input, a { font: inherit; color: inherit; }
 
     header {
-      background-color: rgba(255, 255, 255, 0.75);
+      background-color: rgba(255, 255, 255, 0.7);
       backdrop-filter: blur(20px);
       padding: 0.875rem max(1.5rem, calc((100% - 1280px) / 2 + 1.5rem));
       border-bottom: 1px solid var(--border-color);
@@ -78,36 +77,49 @@
       letter-spacing: 0.04em;
       line-height: 1;
       white-space: nowrap;
+      min-width: 0;
       display: flex;
       align-items: center;
       gap: 0.75rem;
     }
 
     header h1 img {
-      height: 38px;
+      height: 40px;
       width: auto;
+      max-width: 56px;
       object-fit: contain;
+      flex-shrink: 0;
       display: block;
     }
 
-    .badge-static {
+    .btn-nav {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      text-decoration: none;
       background: var(--surface-muted);
       border: 1px solid var(--border-color);
       color: var(--text-soft);
-      font-size: 0.8125rem;
-      font-weight: 500;
-      padding: 0.4rem 0.85rem;
-      border-radius: 999px;
     }
 
-    @media (max-width: 680px) {
-      header { padding: 0.625rem 1rem; }
-      header h1 { font-size: 1.25rem; gap: 0.5rem; }
-      header h1 img { height: 32px; }
-      .badge-static span { display: none; }
+    .badge-numer {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--yellow);
+      color: var(--text-main);
+      font-size: 0.75rem;
+      font-weight: 600;
+      line-height: 1;
+      white-space: nowrap;
+      flex-shrink: 0;
+      padding: 0.45rem 0.85rem;
+      border-radius: 999px;
+      box-shadow: 0 6px 16px -8px rgba(245, 158, 11, 0.8);
     }
 
     .container {
@@ -127,12 +139,12 @@
     }
 
     .card {
-      background-color: rgba(255, 255, 255, 0.85);
+      background-color: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(20px);
       border-radius: var(--radius-lg);
       padding: 1.75rem;
       border: 1px solid rgba(255, 255, 255, 0.9);
-      box-shadow: 0 12px 40px -12px rgba(37, 99, 235, 0.12);
+      box-shadow: 0 12px 40px -12px rgba(37, 99, 235, 0.15);
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
@@ -180,13 +192,7 @@
       justify-content: center;
     }
 
-    #hiddenVideo {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      opacity: 0;
-      pointer-events: none;
-    }
+    #hiddenVideo { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
     #previewCanvas { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     .flash-overlay {
@@ -209,26 +215,35 @@
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; width: 100%;
     }
     .captured-thumbs.four { grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
-    .thumb-slot[hidden] { display: none; }
 
     .thumb-slot {
       aspect-ratio: 4 / 3;
-      background-color: rgba(255, 255, 255, 0.6);
+      background-color: rgba(255, 255, 255, 0.5);
       border: 1.5px dashed rgba(37, 99, 235, 0.35);
       border-radius: var(--radius-md);
-      overflow: hidden; display: flex; align-items: center; justify-content: center;
-      color: var(--text-muted); font-size: 0.8125rem;
+      overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 0.8125rem; position: relative;
     }
+    .thumb-slot[hidden] { display: none; }
+
     .thumb-slot img { width: 100%; height: 100%; object-fit: cover; }
+
+    .btn-retake {
+      position: absolute;
+      bottom: 4px; right: 4px;
+      background: rgba(15, 23, 42, 0.75);
+      color: white; border: none;
+      font-size: 0.6875rem; padding: 0.2rem 0.5rem;
+      border-radius: 6px; cursor: pointer;
+      backdrop-filter: blur(4px); display: flex; align-items: center; gap: 0.25rem;
+      transition: background 0.2s ease;
+    }
+    .btn-retake:hover { background: var(--blue); }
 
     .controls-group { display: flex; flex-direction: column; gap: 0.75rem; }
     .control-label { font-size: 0.875rem; font-weight: 500; color: var(--text-soft); }
 
-    .btn-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.5rem;
-    }
+    .btn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
     .btn-grid.two { grid-template-columns: repeat(2, 1fr); }
 
     .btn-option {
@@ -319,17 +334,11 @@
 
     #outputCanvas { width: 100%; height: auto; display: block; aspect-ratio: 600 / 1800; }
 
-    .action-btn-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      width: 100%;
-      max-width: 260px;
-    }
+    .action-btn-group { display: flex; flex-direction: column; gap: 0.6rem; width: 100%; max-width: 260px; }
 
     .btn-download {
       background-color: var(--blue); color: white;
-      border: none; padding: 0.85rem; border-radius: 10px;
+      border: none; padding: 0.8rem; border-radius: 10px;
       font-size: 0.9375rem; font-weight: 500; cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 0.5rem;
       width: 100%; box-shadow: var(--shadow-blue);
@@ -339,7 +348,6 @@
     .btn-download:hover { background-color: var(--blue-hover); }
     .btn-download:disabled { background-color: var(--border-color); color: var(--text-muted); box-shadow: none; cursor: not-allowed; }
 
-    /* Background Animation */
     .bg-orbs {
       position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: #F8FAFC;
     }
@@ -356,46 +364,49 @@
       50%      { transform: translate3d(4vmax, 3vmax, 0) scale(1.08); }
     }
 
-    /* Landing Overlay */
     body.landing-open { overflow: hidden; }
     body.landing-open header, body.landing-open .container { visibility: hidden; }
 
     .landing {
       position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 1.5rem; overflow-y: auto;
       background: linear-gradient(135deg, rgba(248, 250, 252, 0.45), rgba(255, 255, 255, 0.2));
-      -webkit-backdrop-filter: blur(30px) saturate(160%); backdrop-filter: blur(30px) saturate(160%);
+      backdrop-filter: blur(30px) saturate(160%);
       transition: opacity 0.6s var(--ease), transform 0.6s var(--ease), visibility 0.6s;
     }
     .landing[hidden] { display: none; }
     .landing.leaving { opacity: 0; transform: scale(1.04); visibility: hidden; pointer-events: none; }
 
     .landing-card {
-      width: 100%; max-width: 640px; text-align: center; padding: 0.5rem 1rem; display: flex; flex-direction: column; align-items: center; gap: clamp(0.75rem, 2.4vh, 1.5rem);
+      width: 100%; max-width: 640px; text-align: center; padding: 0.5rem 1rem; display: flex; flex-direction: column; align-items: center; gap: clamp(0.75rem, 2.4vh, 1.5rem); animation: landingRise 0.8s var(--ease) both;
     }
-    .landing-logo img { height: 80px; width: auto; max-width: 70vw; object-fit: contain; display: block; }
+    @keyframes landingRise {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .landing-logo img { height: 80px; width: auto; max-width: 70vw; object-fit: contain; display: block; margin-bottom: -0.5rem; }
     .landing-logo i { display: none; }
     .landing-logo.no-img img { display: none; }
     .landing-logo.no-img i {
-      width: clamp(88px, 20vw, 120px); height: clamp(88px, 20vw, 120px); display: grid; place-items: center; font-size: 3rem; color: #fff; background: var(--blue); border-radius: 18px; box-shadow: var(--shadow-blue);
+      width: clamp(88px, 20vw, 120px); height: clamp(88px, 20vw, 120px); display: grid; place-items: center; font-size: clamp(2.25rem, 8vw, 3.25rem); color: #fff; background: var(--blue); border-radius: 18px; box-shadow: var(--shadow-blue);
     }
     .landing-title {
-      font-family: 'Stars', 'IBM Plex Sans Thai', system-ui, sans-serif; font-size: clamp(2.25rem, min(9vw, 9vh), 4rem); font-weight: 400; color: var(--blue-hover); -webkit-text-stroke: 0.6px var(--blue-hover);
+      font-family: 'Stars', 'IBM Plex Sans Thai', system-ui, sans-serif; font-size: clamp(2.25rem, min(9vw, 9vh), 4rem); font-weight: 400; letter-spacing: 0.02em; line-height: 1.05; color: var(--blue-hover); -webkit-text-stroke: 0.6px var(--blue-hover);
     }
-    .landing-sub { max-width: 46ch; font-size: clamp(0.9375rem, 2.3vh, 1.0625rem); color: var(--text-soft); }
+    .landing-sub { max-width: 46ch; font-size: clamp(0.9375rem, 2.3vh, 1.0625rem); line-height: 1.6; color: var(--text-soft); }
     .landing-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
-    .landing-chips span { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0.85rem; border-radius: 999px; font-size: 0.8125rem; color: var(--text-soft); background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(255, 255, 255, 0.9); }
+    .landing-chips span { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0.85rem; border-radius: 999px; font-size: 0.8125rem; color: var(--text-soft); background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255, 255, 255, 0.9); }
     .landing-chips i { color: var(--blue); }
 
     .btn-enter {
-      margin-top: 0.25rem; background: var(--yellow); color: var(--text-main); border: none; padding: 0.85rem 2.25rem; border-radius: var(--radius-md); font-size: 1.0625rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.75rem; box-shadow: var(--shadow-yellow); transition: all 0.2s var(--ease);
+      margin-top: 0.25rem; background: var(--yellow); color: var(--text-main); border: none; padding: clamp(0.75rem, 2vh, 1rem) 2.25rem; border-radius: var(--radius-md); font-size: 1.0625rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.75rem; box-shadow: var(--shadow-yellow); transition: all 0.2s var(--ease);
     }
     .btn-enter:hover { background: var(--amber); transform: translateY(-2px); }
 
     .save-overlay {
-      position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 1rem; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px);
+      position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 1rem; background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(10px);
     }
     .save-sheet {
-      width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center; gap: 0.875rem; padding: 1.25rem; border-radius: 20px; background: rgba(255, 255, 255, 0.95); text-align: center; font-size: 0.9375rem;
+      width: 100%; max-width: 340px; max-height: 100%; overflow-y: auto; display: flex; flex-direction: column; align-items: center; gap: 0.875rem; padding: 1.25rem; border-radius: 20px; background: rgba(255, 255, 255, 0.92); text-align: center; font-size: 0.9375rem; color: var(--text-main);
     }
     .save-sheet img { width: 100%; max-width: 220px; height: auto; border-radius: 10px; }
   </style>
@@ -410,33 +421,34 @@
     <span class="orb-blue-2"></span>
   </div>
 
-  <section id="landing" class="landing">
+  <section id="landing" class="landing" role="dialog">
     <div class="landing-card">
       <div class="landing-logo">
-        <img src="your-logo.png" alt="Picanine logo" onerror="this.parentElement.classList.add('no-img')">
+        <img src="favicon.png" alt="Picanine logo" onerror="this.parentElement.classList.add('no-img')">
         <i class="fa-solid fa-camera-retro"></i>
       </div>
 
-      <h2 class="landing-title">Picanine</h2>
+      <span class="badge-numer"><i class="fa-solid fa-square-root-variable"></i><span>Handwritten Numer Engine</span></span>
 
-      <p class="landing-sub">โฟโต้บูทออนไลน์ ถ่ายภาพอัตโนมัติ เลือกกรอบ ฟิลเตอร์เรียลไทม์ และดาวน์โหลดรูปถ่ายได้ทันที</p>
+      <h2 class="landing-title"><span>Picanine</span></h2>
+      <p class="landing-sub"><span>โฟโต้บูทออนไลน์ ถ่ายอัตโนมัติ 3 หรือ 4 ช็อต</span> <span>ปรับเปลี่ยนฟิลเตอร์ย้อนหลัง และถ่ายซ้ำเฉพาะรูปได้ทันที</span></p>
 
       <div class="landing-chips">
         <span><i class="fa-solid fa-camera"></i> ถ่ายอัตโนมัติ 3–4 ช็อต</span>
-        <span><i class="fa-solid fa-wand-magic-sparkles"></i> ฟิลเตอร์เรียลไทม์</span>
-        <span><i class="fa-solid fa-border-all"></i> กรอบ 6 ดีไซน์</span>
+        <span><i class="fa-solid fa-wand-magic-sparkles"></i> สลับฟิลเตอร์ย้อนหลัง</span>
+        <span><i class="fa-solid fa-rotate-right"></i> กดถ่ายซ้ำรายรูป</span>
       </div>
 
       <button id="enterBtn" class="btn-enter" onclick="enterSite()">
-        เริ่มต้นใช้งาน <i class="fa-solid fa-arrow-right"></i>
+        เข้าสู่เว็บไซต์ <i class="fa-solid fa-arrow-right"></i>
       </button>
     </div>
   </section>
 
   <header inert>
-    <h1><img src="your-logo.png" alt="" onerror="this.style.display='none'"><span>Picanine </span></h1>
-    <div class="badge-static">
-      <i class="fa-solid fa-globe"></i> <span>GitHub Pages Version</span>
+    <h1><img src="favicon.png" alt="" onerror="this.style.display='none'"><span>Picanine</span></h1>
+    <div class="header-nav">
+      <span class="btn-nav"><i class="fa-solid fa-sparkles"></i> <span>Web Version</span></span>
     </div>
   </header>
 
@@ -487,7 +499,7 @@
       </div>
 
       <div class="controls-group">
-        <label class="control-label"><i class="fa-solid fa-calculator"></i> เลือกฟิลเตอร์นิวเมอ (Handwritten Numer)</label>
+        <label class="control-label"><i class="fa-solid fa-wand-magic-sparkles"></i> เลือกฟิลเตอร์นิวเมอ (ปรับย้อนหลังได้ตลอดเวลา)</label>
         <div class="btn-grid">
           <button class="btn-option active" onclick="setFilter('normal', this)">ปกติ</button>
           <button class="btn-option" onclick="setFilter('grayscale', this)">ขาวดำ (Matrix)</button>
@@ -536,7 +548,7 @@
 
   <script>
     let videoStream = null;
-    let capturedPhotosData = [];
+    let rawCapturedPhotosData = []; // เก็บรูปดิบยังไม่แต่ง
     let currentFilter = 'normal';
     let currentFrameType = 'white';
     let filterAlpha = 1.0;
@@ -749,6 +761,8 @@
       filterAlpha = val / 100;
       document.getElementById('sliderValText').innerText = `${val}%`;
       updateMathInspector(currentFilter);
+      updateThumbnails();
+      updateOutputCanvasPreview(); // อัปเดตพรีวิวบนโฟโต้บูททันทีที่เลื่อนสไลเดอร์
     }
 
     function setFilter(filterName, btnElement) {
@@ -757,24 +771,26 @@
       filterBtns.forEach(b => b.classList.remove('active'));
       btnElement.classList.add('active');
       updateMathInspector(filterName);
+      updateThumbnails();
+      updateOutputCanvasPreview(); // อัปเดตพรีวิวบนโฟโต้บูททันทีที่เปลี่ยนฟิลเตอร์
     }
 
     function updateMathInspector(filterName) {
       const alphaText = `Linear Blending: α = ${filterAlpha.toFixed(2)}`;
       if (filterName === 'grayscale') {
-        numerTypeLabel.innerText = "Matrix Transformation";
+        numerTypeLabel.innerText = "Matrix Transformation + Linear Interpolation";
         matrixCodeDisplay.innerText = `[R']   [0.299  0.587  0.114] [R]\n[G'] = [0.299  0.587  0.114] [G]\n[B']   [0.299  0.587  0.114] [B]\n(${alphaText})`;
       } else if (filterName === 'sepia') {
-        numerTypeLabel.innerText = "Matrix Transformation";
+        numerTypeLabel.innerText = "Matrix Transformation + Linear Interpolation";
         matrixCodeDisplay.innerText = `[R']   [0.393  0.769  0.189] [R]\n[G'] = [0.349  0.686  0.168] [G]\n[B']   [0.272  0.534  0.131] [B]\n(${alphaText})`;
       } else if (filterName === 'sharpen') {
-        numerTypeLabel.innerText = "2D Convolution";
+        numerTypeLabel.innerText = "2D Convolution + Linear Interpolation";
         matrixCodeDisplay.innerText = `Kernel K = [ 0, -1,  0 ]\n           [-1,  5, -1 ]\n           [ 0, -1,  0 ]\n(${alphaText})`;
       } else if (filterName === 'edge') {
-        numerTypeLabel.innerText = "2D Convolution";
+        numerTypeLabel.innerText = "2D Convolution + Linear Interpolation";
         matrixCodeDisplay.innerText = `Kernel K = [-1, -1, -1 ]\n           [-1,  8, -1 ]\n           [-1, -1, -1 ]\n(${alphaText})`;
       } else if (filterName === 'blur') {
-        numerTypeLabel.innerText = "2D Convolution";
+        numerTypeLabel.innerText = "2D Convolution + Linear Interpolation";
         matrixCodeDisplay.innerText = `Kernel K = 1/9 * [ 1,  1,  1 ]\n                 [ 1,  1,  1 ]\n                 [ 1,  1,  1 ]\n(${alphaText})`;
       } else {
         numerTypeLabel.innerText = "Direct Pass";
@@ -805,28 +821,15 @@
         drawFooterText('#F8FAFC', '#64748B', 'BLACK EDITION');
       } else if (theme === 'bambob') {
         outputCtx.fillStyle = '#EFEBE7'; outputCtx.fillRect(0, 0, OUT_W, OUT_H);
-        outputCtx.fillStyle = '#D7CCC8'; outputCtx.fillRect(20, 20, OUT_W - 40, OUT_H - 40);
-        outputCtx.fillStyle = '#EFEBE7'; outputCtx.fillRect(30, 30, OUT_W - 60, OUT_H - 60);
-        drawFooterText('#5D4037', '#8D6E63', 'BAMBOO STUDIO');
+        drawFooterText('#5D4037', '#8D6E63', 'BAMBOB STUDIO');
       } else if (theme === 'pinkcoco') {
         outputCtx.fillStyle = '#FCE4EC'; outputCtx.fillRect(0, 0, OUT_W, OUT_H);
-        outputCtx.fillStyle = '#F8BBD0';
-        for (let i = 0; i < OUT_H; i += 60) outputCtx.fillRect(0, i, OUT_W, 20);
         drawFooterText('#AD1457', '#EC407A', 'PINKCOCO SWEET');
       } else if (theme === 'polkadot') {
         outputCtx.fillStyle = '#E0F2FE'; outputCtx.fillRect(0, 0, OUT_W, OUT_H);
-        outputCtx.fillStyle = '#38BDF8';
-        for (let x = 30; x < OUT_W; x += 60) {
-          for (let y = 30; y < OUT_H; y += 60) {
-            outputCtx.beginPath(); outputCtx.arc(x, y, 12, 0, Math.PI * 2); outputCtx.fill();
-          }
-        }
         drawFooterText('#0369A1', '#0284C7', 'POLKADOT VIBES');
       } else if (theme === 'reddevil') {
         outputCtx.fillStyle = '#7F1D1D'; outputCtx.fillRect(0, 0, OUT_W, OUT_H);
-        outputCtx.fillStyle = '#991B1B'; outputCtx.beginPath();
-        outputCtx.moveTo(0, 0); outputCtx.lineTo(OUT_W, OUT_H); outputCtx.lineTo(0, OUT_H); outputCtx.fill();
-        outputCtx.fillStyle = '#FACC15'; outputCtx.fillRect(0, 1360, OUT_W, 8); outputCtx.fillRect(0, 1375, OUT_W, 4);
         drawFooterText('#FFFFFF', '#FACC15', 'RED DEVILS FC');
       } else {
         outputCtx.fillStyle = '#FFFFFF'; outputCtx.fillRect(0, 0, OUT_W, OUT_H);
@@ -863,18 +866,17 @@
         outputCtx.roundRect(slot.x, slot.y, slot.w, slot.h, 12);
         outputCtx.clip();
 
-        if (capturedPhotosData[idx]) {
+        if (rawCapturedPhotosData[idx]) {
+          // เอา รูปดิบ มาใส่ฟิลเตอร์ตามที่เลือกปัจจุบัน
+          const filteredData = processFrameWithNumer(rawCapturedPhotosData[idx]);
           const tempCanvas = document.createElement('canvas');
           tempCanvas.width = PROC_W;
           tempCanvas.height = PROC_H;
-          tempCanvas.getContext('2d').putImageData(capturedPhotosData[idx], 0, 0);
+          tempCanvas.getContext('2d').putImageData(filteredData, 0, 0);
           drawCover(outputCtx, tempCanvas, slot.x, slot.y, slot.w, slot.h);
         } else {
           outputCtx.fillStyle = 'rgba(241, 245, 249, 0.85)';
           outputCtx.fillRect(slot.x, slot.y, slot.w, slot.h);
-          outputCtx.lineWidth = 2;
-          outputCtx.strokeStyle = 'rgba(100, 116, 139, 0.3)';
-          outputCtx.strokeRect(slot.x + 2, slot.y + 2, slot.w - 4, slot.h - 4);
           outputCtx.fillStyle = '#64748B';
           outputCtx.font = '500 28px "IBM Plex Sans Thai", sans-serif';
           outputCtx.textAlign = 'center';
@@ -886,6 +888,26 @@
       refreshDownloadBlob();
     }
 
+    function updateThumbnails() {
+      for (let i = 0; i < photoCount; i++) {
+        const thumbSlot = document.getElementById(`thumb-${i}`);
+        if (rawCapturedPhotosData[i]) {
+          const filteredData = processFrameWithNumer(rawCapturedPhotosData[i]);
+          const thumbCanvas = document.createElement('canvas');
+          thumbCanvas.width = PROC_W;
+          thumbCanvas.height = PROC_H;
+          thumbCanvas.getContext('2d').putImageData(filteredData, 0, 0);
+
+          thumbSlot.innerHTML = `
+            <img src="${thumbCanvas.toDataURL()}">
+            <button class="btn-retake" onclick="retakeSinglePhoto(${i})"><i class="fa-solid fa-rotate-right"></i> ถ่ายใหม่</button>
+          `;
+        } else {
+          thumbSlot.innerHTML = `รูปที่ ${i + 1}`;
+        }
+      }
+    }
+
     function setPhotoCount(n, btnElement) {
       if (isShooting || n === photoCount) return;
       photoCount = n;
@@ -893,7 +915,7 @@
       btnElement.parentElement.querySelectorAll('.btn-option').forEach(b => b.classList.remove('active'));
       btnElement.classList.add('active');
 
-      capturedPhotosData = [];
+      rawCapturedPhotosData = [];
       downloadBlob = null;
       downloadBtn.disabled = true;
 
@@ -910,7 +932,7 @@
 
     async function startPhotoSequence() {
       isShooting = true;
-      capturedPhotosData = [];
+      rawCapturedPhotosData = [];
       shootBtn.disabled = true;
       downloadBtn.disabled = true;
 
@@ -922,17 +944,11 @@
         await runCountdown(3);
         triggerFlash();
 
-        const currentData = previewCtx.getImageData(0, 0, PROC_W, PROC_H);
-        capturedPhotosData.push(currentData);
+        // บันทึกรูปต้นฉบับดิบ (Unfiltered Raw Data)
+        const rawData = procCtx.getImageData(0, 0, PROC_W, PROC_H);
+        rawCapturedPhotosData.push(rawData);
 
-        const thumbCanvas = document.createElement('canvas');
-        thumbCanvas.width = PROC_W;
-        thumbCanvas.height = PROC_H;
-        thumbCanvas.getContext('2d').putImageData(currentData, 0, 0);
-
-        const thumbSlot = document.getElementById(`thumb-${i}`);
-        thumbSlot.innerHTML = `<img src="${thumbCanvas.toDataURL()}">`;
-
+        updateThumbnails();
         updateOutputCanvasPreview();
         await new Promise(r => setTimeout(r, 800));
       }
@@ -940,6 +956,24 @@
       isShooting = false;
       shootBtn.disabled = false;
       downloadBtn.disabled = false;
+    }
+
+    async function retakeSinglePhoto(index) {
+      if (isShooting) return;
+      isShooting = true;
+      shootBtn.disabled = true;
+
+      await runCountdown(3);
+      triggerFlash();
+
+      const rawData = procCtx.getImageData(0, 0, PROC_W, PROC_H);
+      rawCapturedPhotosData[index] = rawData;
+
+      updateThumbnails();
+      updateOutputCanvasPreview();
+
+      isShooting = false;
+      shootBtn.disabled = false;
     }
 
     function runCountdown(seconds) {
@@ -976,46 +1010,10 @@
       }
     }
 
-    function isMobileDevice() {
-      return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-             (navigator.maxTouchPoints > 1 && /Mac/i.test(navigator.platform));
-    }
-
-    function showSaveOverlay(blob) {
-      const url = URL.createObjectURL(blob);
-      const overlay = document.createElement('div');
-      overlay.className = 'save-overlay';
-      overlay.innerHTML =
-        '<div class="save-sheet">' +
-          '<p>แตะค้างที่รูปภาพ แล้วเลือก “บันทึกรูปภาพ”</p>' +
-          '<img src="' + url + '" alt="Photobooth strip">' +
-          '<button type="button" class="btn-download">ปิด</button>' +
-        '</div>';
-      overlay.querySelector('button').onclick = () => {
-        overlay.remove();
-        URL.revokeObjectURL(url);
-      };
-      document.body.appendChild(overlay);
-    }
-
-    async function deliverBlob(blob) {
+    function downloadImage() {
+      if (!downloadBlob) return;
       const filename = `photobooth-${currentFrameType}-${Date.now()}.png`;
-
-      if (isMobileDevice()) {
-        const file = new File([blob], filename, { type: 'image/png' });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          try {
-            await navigator.share({ files: [file], title: 'Picanine Photobooth' });
-            return;
-          } catch (err) {
-            if (err && err.name === 'AbortError') return;
-          }
-        }
-        showSaveOverlay(blob);
-        return;
-      }
-
-      const url = URL.createObjectURL(blob);
+      const url = URL.createObjectURL(downloadBlob);
       const link = document.createElement('a');
       link.href = url;
       link.download = filename;
@@ -1025,37 +1023,18 @@
       setTimeout(() => URL.revokeObjectURL(url), 10000);
     }
 
-    function downloadImage() {
-      if (downloadBlob) {
-        deliverBlob(downloadBlob);
-        return;
-      }
-      try {
-        outputCanvas.toBlob((blob) => {
-          if (blob) deliverBlob(blob);
-          else alert('ไม่สามารถสร้างไฟล์รูปภาพได้');
-        }, 'image/png');
-      } catch (err) {
-        alert('เบราว์เซอร์ไม่อนุญาตให้บันทึกรูปนี้');
-      }
-    }
-
     function enterSite() {
       const landing = document.getElementById('landing');
-      if (landing.classList.contains('leaving')) return;
-
       landing.classList.add('leaving');
       document.body.classList.remove('landing-open');
       document.querySelectorAll('[inert]').forEach(el => el.removeAttribute('inert'));
       setTimeout(() => { landing.hidden = true; }, 700);
-
       initCamera();
     }
 
     window.addEventListener('load', () => {
       loadFrameImages();
       updateOutputCanvasPreview();
-      document.getElementById('enterBtn').focus();
     });
   </script>
 </body>
